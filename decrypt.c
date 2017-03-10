@@ -35,11 +35,11 @@ int main(int argc, char** argv) {
 
   double computationStartTime = get_wall_seconds();
 
-  double Func1_time = 0, Func2_time = 0, Func3_time = 0;
+  double Func1_time = 0, Func1_Func2_time = 0, Func2_time = 0, Func3_time = 0;
   double characteristicNumber = ComputeNumber(buf0, fileSize, 3, 
-  	&Func1_time, &Func2_time, &Func3_time);
+  	&Func1_time, &Func1_Func2_time, &Func2_time, &Func3_time);
   printf("Func1() time: %f\n Func2() time: %f\n Func3() time: %f\n",
-  	Func1_time, Func2_time, Func3_time);
+  	Func1_time + Func1_Func2_time, Func2_time - Func1_Func2_time, Func3_time);
 
   double start;
   

@@ -56,13 +56,14 @@ double Func3(unsigned char* a, double p, double * time_sec) {
 }
 
 double ComputeNumber(unsigned char* buf, int nBytes, double p, 
-	double * Func1_time, double * Func2_time, double * Func3_time) {
+	double * Func1_time, double * Func1_Func2_time, 
+	double * Func2_time, double * Func3_time) {
   int i;
   double sum = 0;
   for(i = 0; i < nBytes; i++)
     sum += Func1(buf[i], Func1_time);
   for(i = 0; i < nBytes-1; i+=2)
-    sum += Func2(buf[i], buf[i+1], Func2_time, Func1_time);
+    sum += Func2(buf[i], buf[i+1], Func2_time, Func1_Func2_time);
   for(i = 0; i < nBytes-3; i+=4)
     sum += Func3(&buf[i], p, Func3_time);
   return sum;
