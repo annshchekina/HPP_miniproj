@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "timings.h"
 #include <stdio.h>
 #include <stdlib.h>
 

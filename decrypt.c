@@ -35,15 +35,25 @@ int main(int argc, char** argv) {
 
   double computationStartTime = get_wall_seconds();
 
-  double characteristicNumber = ComputeNumber(buf0, fileSize, 3);
+  double Func1_time = 0, Func2_time = 0, Func3_time = 0;
+  double characteristicNumber = ComputeNumber(buf0, fileSize, 3, 
+  	&Func1_time, &Func2_time, &Func3_time);
+  printf("Func1() time: %f\n Func2() time: %f\n Func3() time: %f\n",
+  	Func1_time, Func2_time, Func3_time);
 
+  double start;
+  
   unsigned char* buf1 = (unsigned char*)malloc(fileSize*sizeof(unsigned char));
+  start = get_wall_seconds();
   for(int i = 0; i < fileSize; i++)
 	  buf1[i] = ShuffleBitsA(buf0[i]);
+  printf("ShuffleBitsA() time: %f\n", get_wall_seconds() - start);
 
   unsigned char* buf2 = (unsigned char*)malloc(fileSize*sizeof(unsigned char));
+  start = get_wall_seconds();
   for(int i = 0; i < fileSize; i++)
 	  buf2[i] = ShuffleBitsB(buf1[i]);
+  printf("ShuffleBitsB() time: %f\n", get_wall_seconds() - start);
   
   unsigned char* buf3 = (unsigned char*)malloc(fileSize*sizeof(unsigned char));
   int fileSize_even = fileSize % 2 == 0 ? fileSize : fileSize - 1; 
@@ -55,8 +65,10 @@ int main(int argc, char** argv) {
   }
 
   unsigned char* buf4 = (unsigned char*)malloc(fileSize*sizeof(unsigned char));
+  start = get_wall_seconds();
   for(int i = 0; i < fileSize; i++)
 	  buf4[i] = ShuffleBitsC(buf3[i]);
+  printf("ShuffleBitsC() time: %f\n", get_wall_seconds() - start);
 
   unsigned char* buf5 = (unsigned char*)malloc(fileSize*sizeof(unsigned char));
   for(int i = 0; i < fileSize; i++)
