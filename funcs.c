@@ -3,17 +3,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
-double Func1(unsigned char a, double * time_sec) {
+#define characteristic_coeff 3
+
+double sqrt_Func1, pow_Func1;
+const double inv_Func2 = 1 / 300, inv_Func3 = 1 / 3;
+
+double Func1(unsigned char a, double * time_sec) { // 1B is a char
   double start = get_wall_seconds();
-  double x = a;
-  x *= 0.001;
-  double y = sqrt(x) + 0.12;
-  double z = pow(x, 1.3);
+  double y = sqrtf(a) * sqrt_Func1 + 0.12;
+  double z = powf(a, 1.3) * pow_Func1;
   double w = z / y + 0.4;
-  w = pow(w, 2) / 25;
+  double x = w * w * 0.04;
   *time_sec += get_wall_seconds() - start;
-  return w;
+  return x;
 }
 
 double Func2(unsigned char a, unsigned char b, double * time_sec, double * time_sec_Func1) {
@@ -27,7 +31,8 @@ double Func2(unsigned char a, unsigned char b, double * time_sec, double * time_
   int k;
   double sum = 0;
   for(k = aa; k != mid; k += step)
-    sum += Func1(k, time_sec_Func1) / 300;
+    sum += Func1(k, time_sec_Func1);
+  sum *= inv_Func2;
   *time_sec += get_wall_seconds() - start;
   return sum;
 }
@@ -48,9 +53,10 @@ double Func3(unsigned char* a, double p, double * time_sec) {
   w[3] = v[0] - 0.2*v[1] + 0.3*v[2];
   double sum = 0;
   for(k = 0; k < 4; k++)
-    sum += pow(w[k], p) / 3;
+    sum += w[k] * w[k] * w[k]; // power characteristic_coeff
   free(v);
   free(w);
+  sum *= inv_Func3;
   *time_sec += get_wall_seconds() - start;
   return sum;
 }
@@ -58,6 +64,9 @@ double Func3(unsigned char* a, double p, double * time_sec) {
 double ComputeNumber(unsigned char* buf, int nBytes, double p, 
 	double * Func1_time, double * Func1_Func2_time, 
 	double * Func2_time, double * Func3_time) {
+  assert(p == characteristic_coeff);
+  sqrt_Func1 = sqrt(0.001);
+  pow_Func1 = pow(0.001, 1.3);
   int i;
   double sum = 0;
   for(i = 0; i < nBytes; i++)
