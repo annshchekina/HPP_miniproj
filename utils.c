@@ -1,10 +1,10 @@
 #include "utils.h"
-#include "timings.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned char ShuffleBitsA(unsigned char c) {
-  int* bits = (int*)malloc(8*sizeof(int)); // char represented as a binary
+int bits[8], bitsB[8];
+
+inline unsigned char ShuffleBitsA(unsigned char c) {
   for(int i = 0; i < 8; i++)
     bits[i] = (c >> i) & 0x01;
   // Swap bits pairwise, starting at 0
@@ -19,37 +19,31 @@ unsigned char ShuffleBitsA(unsigned char c) {
     if(bits[i])
       result |= (0x01 << i);
   }
-  free(bits);
   return result;
 }
 
-unsigned char ShuffleBitsB(unsigned char c) {
-  int* bitsA = (int*)malloc(8*sizeof(int));
+inline unsigned char ShuffleBitsB(unsigned char c) {
   for(int i = 0; i < 8; i++)
-    bitsA[i] = (c >> i) & 0x01;
+    bits[i] = (c >> i) & 0x01;
   // Swap bits pairwise, starting at 1
   for(int i = 1; i < 7; i+=2) {
     // Swap bits i and i+1
-    int tmp = bitsA[i];
-    bitsA[i] = bitsA[i+1];
-    bitsA[i+1] = tmp;
+    int tmp = bits[i];
+    bits[i] = bits[i+1];
+    bits[i+1] = tmp;
   }
   // Create bitsB list where bits from bitsA are placed in reverse order 
-  int* bitsB = (int*)malloc(8*sizeof(int));
   for(int i = 0; i < 8; i++)
-    bitsB[i] = bitsA[7-i];
+    bitsB[i] = bits[7-i];
   unsigned char result = 0;
   for(int i = 0; i < 8; i++) {
     if(bitsB[i])
       result |= (0x01 << i);
   }
-  free(bitsA);
-  free(bitsB);
   return result;
 }
 
-unsigned char ShuffleBitsC(unsigned char c) {
-  int* bits = (int*)malloc(8*sizeof(int));
+inline unsigned char ShuffleBitsC(unsigned char c) {
   for(int i = 0; i < 8; i++)
     bits[i] = (c >> i) & 0x01;
   // Swap bits 3 and 6
@@ -65,7 +59,6 @@ unsigned char ShuffleBitsC(unsigned char c) {
     if(bits[i])
       result |= (0x01 << i);
   }
-  free(bits);
   return result;
 }
 
